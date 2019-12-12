@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: mongodb-framework   data:    mongodb:
+     uri: mongodb://localhost:27018/InventorySystem#     uri: mongodb://zhongchi:123456@localhost:27017/zhongchi#      database: zhongchi
+#      host: localhost
+#      port: 27017
+#      username: zhongchi
+#      password:#      - 123456

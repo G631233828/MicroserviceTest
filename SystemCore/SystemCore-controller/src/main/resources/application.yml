@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: systemcore-provider
+  data:
+    mongodb:
+     uri: mongodb://localhost:27017/zhongchi
+#     uri: mongodb://zhongchi:123456@localhost:27017/zhongchi
+#      database: zhongchi
+#      host: localhost
+#      port: 27017
+#      username: zhongchi
+#      password:
+#      - 123456
+server:  max-http-header-size: 20480
+  #hystrix调用方法的超时时间，默认是1000毫秒
+

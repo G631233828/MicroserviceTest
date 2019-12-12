@@ -1,0 +1,9 @@
+#bootstrap.yml系统级配置文件，优先级更高
+spring:
+  cloud:
+    config:
+      name:  systemcore-provider #需要从github上面读取的资源名称，注意不需要后面的扩展名
+      profile: dev #访问的模式 选择dev生产模式 
+      label: master
+      uri: http://localhost:8200 #本微服务启动后先去找8001号服务，通过SpringCloudConfig获取github的服务地址
+      

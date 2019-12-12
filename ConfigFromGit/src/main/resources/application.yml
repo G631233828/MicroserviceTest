@@ -1,0 +1,16 @@
+server:
+  port: 8200
+  
+spring:
+  application:
+    name: configfrom-git
+#  profiles: #从本地读取配置文件#    active:#    - native  
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/G631233828/SpringCloudConfig.git    #git仓库
+#        native:  #本地配置的配置#          search-locations:#          - classpath:/configs  
+ 
+      
