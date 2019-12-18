@@ -1,9 +1,65 @@
 #bootstrap.yml系统级配置文件，优先级更高
+#spring:
+#  cloud:
+#    config:
+#      name:  systemcore-provider #需要从github上面读取的资源名称，注意不需要后面的扩展名
+#      profile: dev #访问的模式 选择dev生产模式 
+#      label: master
+#      uri: http://localhost:8200 #本微服务启动后先去找8001号服务，通过SpringCloudConfig获取github的服务地址
+#      
+      
+#上面的配置会从8200端口中读取Git的配置 下面的代码就是git上的配置 
+eurekaserver: http://192.168.50.200:7901 
+
 spring:
-  cloud:
-    config:
-      name:  systemcore-provider #需要从github上面读取的资源名称，注意不需要后面的扩展名
-      profile: dev #访问的模式 选择dev生产模式 
-      label: master
-      uri: http://localhost:8200 #本微服务启动后先去找8001号服务，通过SpringCloudConfig获取github的服务地址
+  profiles:
+    active:
+    - dev
+---
+server:
+  port: 8001         
+
+
+spring:
+  profiles: dev
+  application:
+    name: systemcore-provider
+    
+eureka:
+  client:
+    service-url: 
+     defaultZone: ${eurekaserver}/eureka
+     register-with-eureka: true  ##表示是否将自己注册到Eureka Server，默认是true。
+     fetch-registry: false       ##表示是否从Eureka Server获取注册信息，默认为true。  instance: #设置别名
+    instance-id: systemcore-provider8001
+    hostname: localhost
+   # ip-address: 192.168.50.104
+    prefer-ip-address: true       #访问路径可以显示IP地址
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info
+        
+info: #配置点击服务之后显示详细信息
+   app.name: springcloud
+   company.name: zhongchi
+   build.artifactId: $project.artifactId$
+   build.version: $project.version$
+   
+---
+server:
+  port: 8001                    
+
+spring:
+  profiles: test
+  application:
+    name: systemcore-provider
+    
+eureka:
+  client:
+    service-url: 
+     defaultZone: http://localhost:7001/eureka     
+      
       

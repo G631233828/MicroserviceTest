@@ -1,6 +1,10 @@
 spring:
   application:
     name: app-admin
+    http:
+    multipart:
+      max-file-size: 2000Mb      # Max file size，默认1M
+      max-request-size: 2500Mb   # Max request size，默认10M
 hystrix:
   command:
     default:  #default全局有效，service id指定应用有效
@@ -10,3 +14,4 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 20000 #断路器超时时间，默认1000m
+            

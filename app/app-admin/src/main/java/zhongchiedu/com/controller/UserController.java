@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +40,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RoleService roleService;
 
@@ -50,13 +53,13 @@ public class UserController {
 		try {
 			Pagination<User> pagination = this.userService.list(pageNo, pageSize);
 			model.addAttribute("pageList", pagination);
-			
-		}catch (Exception e) {
-			log.info("查询用户信息失败{}",e.toString());
+
+		} catch (Exception e) {
+			log.info("查询用户信息失败{}", e.toString());
 		}
 		return "admin/user/list";
 	}
-	
+
 	/**
 	 * 跳转到添加页面
 	 */
@@ -67,24 +70,41 @@ public class UserController {
 		model.addAttribute("roleList", list);
 		return "admin/user/add";
 	}
-	
+
 	@Value("${upload-imgpath}")
 	private String imgPath;
 	@Value("${upload-dir}")
 	private String dir;
-	
+
 	@PostMapping("/user")
 	@RequiresPermissions(value = "admin:user:add")
 	@SystemControllerLog(description = "添加用户")
-	public String addUser(HttpServletRequest request, @ModelAttribute("user") User user,
-			@RequestParam(value = "roleId", defaultValue = "") String roleId, @RequestParam("file") MultipartFile[] file,
+	public String addUser(HttpServletRequest request,  User user,
+			@RequestParam(value = "roleId", defaultValue = "") String roleId,@RequestParam(value = "file",required = false) MultipartFile file ,
 			@RequestParam(value = "oldheadImg", defaultValue = "") String oldheadImg) {
-		this.userService.saveOrUpdateUser(user, roleId,file,imgPath,dir,oldheadImg);
-		return "redirect:/admin/users";
+		
+		//导出缺少单价，总价
+		//增加：应收款
+		//
+		
+		this.userService.upload(file);
+		boolean flag = this.userService.saveOrUpdateUser(user, null,null,null,null);
+		//boolean flag = this.userService.saveOrUpdateUser(user, roleId,imgPath,dir,oldheadImg);
+		
+		
+	//System.out.println(user);
+//		User u = new User();
+//		u.setAccountName("fliay");
+//		u.setCardId("123");
+//		
+//		System.out.println(u);
+//		this.userService.saveOrUpdateUser(u);
+		return "redirect:/users";
 	}
-	
+
 	/**
 	 * 修改用户
+	 * 
 	 * @param request
 	 * @param user
 	 * @param roleId
@@ -92,17 +112,17 @@ public class UserController {
 	 * @param oldheadImg
 	 * @return
 	 */
-	@PutMapping("/user")
-	@RequiresPermissions(value = "admin:user:edit")
-	@SystemControllerLog(description = "修改用户")
-	public String editUser(HttpServletRequest request, @ModelAttribute("user") User user,
-			@RequestParam(value = "roleId", defaultValue = "") String roleId, @RequestParam("file")MultipartFile[] file,
-			@RequestParam(value = "oldheadImg", defaultValue = "") String oldheadImg) {
-		this.userService.saveOrUpdateUser(user, roleId,file,imgPath,dir,oldheadImg);
-		return "redirect:/admin/users";
-	}	
-	
-	
+//	@PutMapping("/user")
+//	@RequiresPermissions(value = "admin:user:edit")
+//	@SystemControllerLog(description = "修改用户")
+//	public String editUser(HttpServletRequest request, @ModelAttribute("user") User user,
+//			@RequestParam(value = "roleId", defaultValue = "") String roleId, @RequestParam("file")MultipartFile file,
+//			@RequestParam(value = "oldheadImg", defaultValue = "") String oldheadImg) {
+//		this.userService.saveOrUpdateUser(user, roleId,file,imgPath,dir,oldheadImg);
+//		return "redirect:/users";
+//	}	
+//	
+
 	/**
 	 * 跳转到编辑界面
 	 * 
@@ -119,22 +139,22 @@ public class UserController {
 		return "admin/user/add";
 
 	}
-	
+
 	@DeleteMapping("/user/{id}")
 	@RequiresPermissions(value = "admin:user:delete")
 	@SystemControllerLog(description = "删除用户")
 	public String delete(@PathVariable String id) {
-		 this.userService.remove(id);
+		this.userService.remove(id);
 		return "redirect:/admin/users";
 	}
-	
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/user/checkPassword", method = RequestMethod.POST)
 	public BasicDataResult checkPassword(@RequestParam(value = "id", defaultValue = "") String id,
 			@RequestParam(value = "password", defaultValue = "") String password) {
 		return this.userService.checkPassword(id, password);
 	}
-	
+
 	/**
 	 * 通过ajax获取是否存在重复账号的信息
 	 * 
@@ -142,25 +162,25 @@ public class UserController {
 	 * @param session
 	 * @param response
 	 */
+	@ResponseBody
 	@RequestMapping(value = "/user/ajaxgetRepletes", method = RequestMethod.POST)
 	public BasicDataResult ajaxgetRepletes(@RequestParam(value = "accountName", defaultValue = "") String accountName) {
 		return this.userService.ajaxgetRepletes(accountName);
 	}
-	
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/user/disable", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public BasicDataResult userDisable(@RequestParam(value = "id", defaultValue = "") String id) {
 		return this.userService.userDisable(id);
 
 	}
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/user/editPassword", method = RequestMethod.POST)
 	public BasicDataResult editPassword(@RequestParam(value = "id", defaultValue = "") String id,
 			@RequestParam(value = "password2", defaultValue = "") String password2) {
-		
+
 		return this.userService.editPassword(id, password2);
 	}
-	
-	
 
 }

@@ -183,7 +183,7 @@
 					var a = $("input[name='ids']:checked").length;
 					if (a == 1) {
 						var id = $("input[name='ids']:checked").val();
-						window.location.href = path + id;
+						window.location.href = path +"/"+ id;
 					} else if (a == 0) {
 						swal({
 							type : "warning",

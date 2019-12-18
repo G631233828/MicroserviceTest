@@ -1,9 +1,57 @@
 #bootstrap.yml系统级配置文件，优先级更高
+#spring:
+#  cloud:
+#    config:
+#      name:  app-admin #需要从github上面读取的资源名称，注意不需要后面的扩展名
+#      profile: dev #访问的模式 选择dev生产模式 
+#      label: master
+#      uri: http://localhost:8200 #本微服务启动后先去找3344号服务，通过SpringCloudConfig获取github的服务地址
+#  
+
+
+#上面的配置会从8200端口中读取Git的配置 下面的代码就是git上的配置 
+eurekaserver: http://192.168.50.200:7901 
+ 
 spring:
-  cloud:
-    config:
-      name:  app-admin #需要从github上面读取的资源名称，注意不需要后面的扩展名
-      profile: dev #访问的模式 选择dev生产模式 
-      label: master
-      uri: http://localhost:8200 #本微服务启动后先去找3344号服务，通过SpringCloudConfig获取github的服务地址
-      
+  profiles:
+    active:
+    - dev
+---    
+server:
+  port: 80  #注册中心 占用7001 端口，冒号后面必须要有空格                 
+
+spring:
+  profiles: dev
+  application:
+    name: app-admin
+  server:
+  port: 80
+feign:
+  hystrix:
+    enabled: true
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eurekaserver}/eureka
+      #defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka
+---
+server:
+  port: 80  #注册中心 占用7001 端口，冒号后面必须要有空格                 
+
+spring:
+  profiles: test
+  application:
+    name: app-admin
+  server:
+  port: 80
+feign:
+  hystrix:
+    enabled: true
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka

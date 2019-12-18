@@ -3,17 +3,13 @@ package zhongchiedu.com.serviceImpl;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
-import zhongchiedu.com.pojo.MultiMedia;
-import zhongchiedu.com.pojo.Role;
 import zhongchiedu.com.pojo.User;
 import zhongchiedu.com.service.UserService;
 import zhongchiedu.com.utils.BasicDataResult;
@@ -39,29 +35,39 @@ public class UserServiceImpl extends GeneralServiceImpl<User> implements UserSer
 	 * @param roleId
 	 * @return
 	 */
-	public void saveOrUpdateUser(User user, String roleId ,MultipartFile[] file ,String imgPath,String dir,String oldheadImg) {
-		User getUser = null;
-		List<MultiMedia> userHead = null; 
-			userHead = this.multiMediaSerice.uploadPictures(file, dir, imgPath, "USER",105,105);
+	public boolean saveOrUpdateUser( User user,  String roleId ,String imgPath,String dir,String oldheadImg) {
+	//public boolean saveOrUpdateUser(User user ) {
+		System.out.println("user:"+user);
+		System.out.println("user:"+user);
+		System.out.println("user:"+user);
+		System.out.println("user:"+user);
+		System.out.println("user:"+user);
 	
-		if(Common.isNotEmpty(user.getId())){
-			getUser = this.findOneById(user.getId(), User.class);
-			if(Common.isNotEmpty(getUser)){
-				user.setPhotograph(Common.isNotEmpty(oldheadImg)?getUser.getPhotograph():null);
-				user.setAccountName(getUser.getAccountName());
-			}
-		}
-		if(userHead.size()>0){
-			user.setPhotograph(userHead.get(0));
-		}
-		Role role = this.roleService.findRoleById(roleId);
-		user.setRole(role != null ? role : null);
-		if(Common.isNotEmpty(getUser)){
-			BeanUtils.copyProperties(user, getUser);
-			this.save(user);
-		}else{
-			this.insert(user);
-		}
+		return true;
+		
+		
+		//		User getUser = null;
+//		List<MultiMedia> userHead = null; 
+//			userHead = this.multiMediaSerice.uploadPictures(file, dir, imgPath, "USER",105,105);
+//	
+//		if(Common.isNotEmpty(user.getId())){
+//			getUser = this.findOneById(user.getId(), User.class);
+//			if(Common.isNotEmpty(getUser)){
+//				user.setPhotograph(Common.isNotEmpty(oldheadImg)?getUser.getPhotograph():null);
+//				user.setAccountName(getUser.getAccountName());
+//			}
+//		}
+//		if(userHead.size()>0){
+//			user.setPhotograph(userHead.get(0));
+//		}
+//		Role role = this.roleService.findRoleById(roleId);
+//		user.setRole(role != null ? role : null);
+//		if(Common.isNotEmpty(getUser)){
+//			BeanUtils.copyProperties(user, getUser);
+//			this.save(user);
+//		}else{
+//			this.insert(user);
+//		}
 		
 	}
 
@@ -208,6 +214,15 @@ public class UserServiceImpl extends GeneralServiceImpl<User> implements UserSer
 			return BasicDataResult.error("删除数据失败");
 		}
 		return BasicDataResult.ok();
+	}
+
+
+	@Override
+	public String upload(MultipartFile file) {
+		System.out.println("service api  file " + file.getOriginalFilename());
+		
+		// TODO Auto-generated method stub
+		return file.getOriginalFilename();
 	}
 
  

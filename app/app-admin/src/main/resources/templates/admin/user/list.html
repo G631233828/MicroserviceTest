@@ -56,7 +56,7 @@ canvas#canvas4 {
 								<div>
 									<shiro:hasPermission name="admin:user:add">
 										<button class="btn btn-default btn-sm"
-											th:onclick="|window.location.href='@{/user}'|">
+											th:onclick="|window.location.href='@{user}'|">
 											<i class="glyphicon glyphicon-plus"> </i> 添加
 										</button>
 									</shiro:hasPermission>
@@ -64,7 +64,7 @@ canvas#canvas4 {
 									<shiro:hasPermission name="admin:user:edit">
 										<button class="btn btn-primary btn-sm"
 											onclick="return toeditPage('','user')">
-											<i class="lyphicon glyphicon-home"> </i>编辑
+											<i class="fa fa-edit"> </i>编辑
 										</button>
 									</shiro:hasPermission>
 

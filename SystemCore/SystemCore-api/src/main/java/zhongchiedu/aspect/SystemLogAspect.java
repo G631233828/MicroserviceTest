@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.google.gson.Gson;
-
 import zhongchiedu.annotation.SystemControllerLog;
 import zhongchiedu.annotation.SystemServiceLog;
 import zhongchiedu.com.dao.LogDaoImpl;
@@ -97,52 +95,52 @@ public class SystemLogAspect {
      */    
     @AfterThrowing(pointcut = "controllerAspect()", throwing = "e")    
      public  void doAfterThrowing(JoinPoint joinPoint, Throwable e) {    
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();    
-        HttpSession session = request.getSession();    
-        Gson gson = new Gson();
-        //读取session中的用户    
-        User user = (User) session.getAttribute(Contents.USER_SESSION);    
-        //获取请求ip    
-        String ip = request.getRemoteAddr();    
-        //获取用户请求方法的参数并序列化为JSON格式字符串    
-        String params = "";    
-         if (joinPoint.getArgs() !=  null && joinPoint.getArgs().length > 0) {    
-             for ( int i = 0; i < joinPoint.getArgs().length; i++) {    
-                params += gson.toJson(joinPoint.getArgs()[i]) + ";";    
-            }    
-        }    
-         try {    
-              /*========控制台输出=========*/    
-//            System.out.println("=====异常通知开始=====");    
-//            System.out.println("异常代码:" + e.getClass().getName());    
-//            System.out.println("异常信息:" + e.getMessage());    
-//            System.out.println("异常方法:" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));    
-//            System.out.println("方法描述:" + getControllerMethodDescription(joinPoint));    
-//            System.out.println("请求人:" + user.getAccountName());    
-//            System.out.println("请求IP:" + ip);    
-//            System.out.println("请求参数:" + params);    
-               /*==========数据库日志=========*/    
-            Log log = new Log();    
-            log.setDescription(getControllerMethodDescription(joinPoint));    
-            log.setExceptionCode(e.getClass().getName());    
-            log.setType("1");    
-            log.setExceptionDetail(e.getMessage());    
-            log.setMethod((joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));    
-            log.setParams(params);    
-            log.setCreateby(user.getAccountName());    
-            log.setCreateDate(Common.fromDateH());    
-            log.setRequestIp(ip);    
-            //保存数据库    
-            	this.LogDao.insert(log); 
-            System.out.println("=====异常通知结束=====");    
-        }  catch (Exception ex) {    
-            //记录本地异常日志    
-            logger.error("==异常通知异常==");    
-            logger.error("异常信息:{}", ex.getMessage());    
-        }    
-         /*==========记录本地异常日志==========*/    
-        logger.error("异常方法:{}异常代码:{}异常信息:{}参数:{}", joinPoint.getTarget().getClass().getName() + joinPoint.getSignature().getName(), e.getClass().getName(), e.getMessage(), params);    
-    
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();    
+//        HttpSession session = request.getSession();    
+//        Gson gson = new Gson();
+//        //读取session中的用户    
+//        User user = (User) session.getAttribute(Contents.USER_SESSION);    
+//        //获取请求ip    
+//        String ip = request.getRemoteAddr();    
+//        //获取用户请求方法的参数并序列化为JSON格式字符串    
+//        String params = "";    
+//         if (joinPoint.getArgs() !=  null && joinPoint.getArgs().length > 0) {    
+//             for ( int i = 0; i < joinPoint.getArgs().length; i++) {    
+//                params += gson.toJson(joinPoint.getArgs()[i]) + ";";    
+//            }    
+//        }    
+//         try {    
+//              /*========控制台输出=========*/    
+////            System.out.println("=====异常通知开始=====");    
+////            System.out.println("异常代码:" + e.getClass().getName());    
+////            System.out.println("异常信息:" + e.getMessage());    
+////            System.out.println("异常方法:" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));    
+////            System.out.println("方法描述:" + getControllerMethodDescription(joinPoint));    
+////            System.out.println("请求人:" + user.getAccountName());    
+////            System.out.println("请求IP:" + ip);    
+////            System.out.println("请求参数:" + params);    
+//               /*==========数据库日志=========*/    
+//            Log log = new Log();    
+//            log.setDescription(getControllerMethodDescription(joinPoint));    
+//            log.setExceptionCode(e.getClass().getName());    
+//            log.setType("1");    
+//            log.setExceptionDetail(e.getMessage());    
+//            log.setMethod((joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));    
+//            log.setParams(params);    
+//            log.setCreateby(user.getAccountName());    
+//            log.setCreateDate(Common.fromDateH());    
+//            log.setRequestIp(ip);    
+//            //保存数据库    
+//            	this.LogDao.insert(log); 
+//            System.out.println("=====异常通知结束=====");    
+//        }  catch (Exception ex) {    
+//            //记录本地异常日志    
+//            logger.error("==异常通知异常==");    
+//            logger.error("异常信息:{}", ex.getMessage());    
+//        }    
+//         /*==========记录本地异常日志==========*/    
+//        logger.error("异常方法:{}异常代码:{}异常信息:{}参数:{}", joinPoint.getTarget().getClass().getName() + joinPoint.getSignature().getName(), e.getClass().getName(), e.getMessage(), params);    
+//    
     }    
     
     

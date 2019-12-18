@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>com.thoughtworks.xstream</groupId>
@@ -25,6 +25,11 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 
 		<dependency>
@@ -103,6 +108,7 @@
 					<classifier>exe</classifier>
 				</configuration>
 			</plugin>
+			
 		</plugins>
 	</build>
 
